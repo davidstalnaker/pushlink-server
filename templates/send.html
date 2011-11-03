@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Send link to your iOS device</title>
+	<link rel="stylesheet" type="text/css" href="static/style.css">
+	<script type="text/javascript" src="static/jquery.js"></script>
+	
+	<script>
+	
+	$(document).ready(function() {
+		$("#urlsender").submit(function() {
+			var url = $("#url").val();
+			var passcode = $("#passcode").val();
+			$.post("send", {url:url, passcode:passcode}, function(data) {
+				$("#output").html(data);
+			})
+			return false;
+		})
+	});
+	
+	</script>
+	
+</head>
+<body>
+	<form id="urlsender">
+		URL: <input id="url"><br />
+		Passcode <input id="passcode"><br />
+		<input type="submit" id="send" value="send">
+	</form>
+	<p id="output"></p>
+</body>
+</html>
