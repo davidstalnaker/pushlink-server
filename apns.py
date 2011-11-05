@@ -2,7 +2,10 @@ from binascii import unhexlify
 from APNSWrapper import *
 
 def sendMessage(token, url):
-	print(token, url)
+	# format url and token
+	url = url.encode('ascii', 'ignore')
+	if url.find('://') == -1:
+		url = 'http://' + url
 	deviceToken = unhexlify(token)
 	
 	# create wrapper
