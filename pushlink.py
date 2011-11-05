@@ -12,27 +12,39 @@ db = connection.pushlink
 def index():
 	return render_template('send.html') 
 
+@app.route('/reregister', methods=['POST'])
+def reregister():
+	token = request.form['token']
+	
+	db.devices.remove({"token": token})
+	passcode = gen_unique_passcode()
+	db.devices.insert({"token": token, "passcode":passcode})
+	
+	return make_json_response({
+		'token': token,
+		'passcode': passcode,
+		'new': True
+	})
+	
+
 @app.route('/register', methods=['POST'])
 def register():
 	token = request.form['token']
+	ret = {
+		'token': token,
+	}
 	
 	existing = db.devices.find_one({"token":token})
 	if existing:
-		ret = {
-			'token': token,
-			'passcode': existing["passcode"],
-			'new': False
-		}
+		ret['passcode'] = existing["passcode"]
+		ret['new'] = False
 	else:
 		passcode = gen_unique_passcode()
 		db.devices.insert({"token":token, "passcode":passcode})
-		ret = {
-			'token': token,
-			'passcode': passcode,
-			'new': True
-		}
+		ret['passcode'] = passcode
+		ret['new'] = True
 	
-	return dumps(ret)
+	return make_json_response(ret)
 
 @app.route('/send', methods=['POST'])
 def send():
