@@ -9,7 +9,7 @@ def sendMessage(token, url):
 	deviceToken = unhexlify(token)
 	
 	# create wrapper
-	wrapper = APNSNotificationWrapper('ck.pem', True)
+	wrapper = APNSNotificationWrapper('PushLink.pem', True)
 	
 	# create message
 	message = APNSNotification()
