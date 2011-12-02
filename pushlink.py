@@ -3,6 +3,7 @@ from flask import Flask, make_response, render_template, request, session, escap
 from random import randint
 from json import dumps
 from apns import sendMessage
+from ratelimit import ratelimit
 
 app = Flask(__name__)
 connection = Connection("localhost")
@@ -47,7 +48,9 @@ def register():
 	return make_json_response(ret)
 
 @app.route('/send', methods=['POST'])
+@ratelimit(limit=60, per=60)
 def send():
+	print(request.endpoint)
 	passcode = request.form['passcode']
 	url = request.form['url']
 	device = db.devices.find_one({"passcode":passcode})
