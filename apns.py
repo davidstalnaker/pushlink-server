@@ -1,11 +1,11 @@
 from binascii import unhexlify
 from APNSWrapper import *
 
-def sendMessage(token, url):
 	# format url and token
 	url = url.encode('ascii', 'ignore')
 	if url.find('://') == -1:
 		url = 'http://' + url
+def send_url(token, url, is_shortened = False):
 	deviceToken = unhexlify(token)
 	
 	# create wrapper
@@ -22,8 +22,12 @@ def sendMessage(token, url):
 	message.sound()
 	
 	# set the url
-	url = APNSProperty("url", url)
-	message.appendProperty(url)
+	if is_shortened:
+		print('sending shortened url')
+		url_prop = APNSProperty("url_id", url)
+	else:
+		url_prop = APNSProperty("url", url)
+	message.appendProperty(url_prop)
 	
 	# add message to tuple and send it to APNS server
 	wrapper.append(message)
