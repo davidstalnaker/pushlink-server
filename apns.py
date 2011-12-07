@@ -1,11 +1,8 @@
 from binascii import unhexlify
 from APNSWrapper import *
 
-	# format url and token
-	url = url.encode('ascii', 'ignore')
-	if url.find('://') == -1:
-		url = 'http://' + url
 def send_url(token, url, is_shortened = False):
+	# format token
 	deviceToken = unhexlify(token)
 	
 	# create wrapper

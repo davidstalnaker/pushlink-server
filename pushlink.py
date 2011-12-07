@@ -54,6 +54,9 @@ def register():
 def send():
 	passcode = request.form['passcode']
 	url = request.form['url']
+	url = url.encode('ascii', 'ignore')
+	if url.find('://') == -1:
+		url = 'http://' + url	
 	device = db.devices.find_one({"passcode":passcode})
 	if device:
 		try:
