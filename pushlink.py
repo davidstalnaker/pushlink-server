@@ -69,6 +69,15 @@ def send():
 	else:
 		return make_json_response({'error': 'unknown passcode'}, 400)
 		
+@app.route('/getUrl', methods=['GET'])
+def get_encoded_url():
+	url_id = request.args['url_id']
+	url = db.url_ids.find_one({'url_id': url_id})
+	if url:
+		return make_json_response({'url': url['url']})
+	else:
+		return make_json_response({'error': 'url not in database'}, 400)
+		
 def gen_unique_passcode():
 	num_words = db.words.count()
 	while True:
