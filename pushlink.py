@@ -50,7 +50,6 @@ def register():
 @app.route('/send', methods=['POST'])
 @ratelimit(limit=60, per=60)
 def send():
-	print(request.endpoint)
 	passcode = request.form['passcode']
 	url = request.form['url']
 	device = db.devices.find_one({"passcode":passcode})
