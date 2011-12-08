@@ -11,6 +11,13 @@ app = Flask(__name__)
 connection = Connection("localhost")
 db = connection.pushlink
 
+class PushlinkException(Exception):
+	pass
+	
+@app.errorhandler(PushlinkException)
+def handle_error(e):
+	return make_json_response({'error': e.message}, 400)
+
 @app.route('/')
 def index():
 	return render_template('send.html') 
@@ -67,7 +74,7 @@ def send():
 			send_url(device["token"], url_id, is_shortened=True)
 		return ""
 	else:
-		return make_json_response({'error': 'unknown passcode'}, 400)
+		raise PushlinkException('unknown passcode')
 		
 @app.route('/getUrl', methods=['GET'])
 def get_encoded_url():
@@ -76,7 +83,7 @@ def get_encoded_url():
 	if url:
 		return make_json_response({'url': url['url']})
 	else:
-		return make_json_response({'error': 'url not in database'}, 400)
+		raise PushlinkException('url not in database')
 		
 def gen_unique_passcode():
 	num_words = db.words.count()
