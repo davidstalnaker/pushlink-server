@@ -1,6 +1,6 @@
-from pymongo.connection import Connection
+import pymongo.connection import Connection
 from flask import Flask, make_response, render_template, request, session, escape, redirect, url_for, g
-from random import randint, choice
+import random
 from json import dumps
 from apns import send_url
 from ratelimit import ratelimit
@@ -90,7 +90,7 @@ def gen_unique_passcode():
 	while True:
 		pclist = []
 		for i in range(3):
-			word = db.words.find_one(skip=randint(0,num_words - 1))
+			word = db.words.find_one(skip=random.randint(0,num_words - 1))
 			pclist.append(word['word'])
 		passcode = ' '.join(pclist)
 		if db.devices.find({'passcode': passcode}).count() == 0:
@@ -99,7 +99,7 @@ def gen_unique_passcode():
 	
 def gen_unique_url_id(size=8, chars=string.ascii_lowercase + string.digits):
 	while True:
-		url_id = ''.join(choice(chars) for x in range(size))
+		url_id = ''.join(random.choice(chars) for x in range(size))
 		if db.url_ids.find({'url_id': url_id}).count() == 0:
 			break
 	return url_id
