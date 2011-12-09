@@ -1,7 +1,7 @@
 import pymongo.connection import Connection
 from flask import Flask, make_response, render_template, request, session, escape, redirect, url_for, g
 import random
-from json import dumps
+import json
 from apns import send_url
 from ratelimit import ratelimit
 from APNSWrapper.apnsexceptions import APNSPayloadLengthError
@@ -105,7 +105,7 @@ def gen_unique_url_id(size=8, chars=string.ascii_lowercase + string.digits):
 	return url_id
 
 def make_json_response(jsonObj, responseCode = 200):
-	response = make_response(dumps(jsonObj), responseCode)
+	response = make_response(json.dumps(jsonObj), responseCode)
 	response.headers['content-type'] = 'application/json'
 	return response
 
